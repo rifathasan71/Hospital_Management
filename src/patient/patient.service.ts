@@ -5,6 +5,11 @@ import { Patient } from './patient.entity';
 import { UpdateMedicalDto } from './dto/update-medical.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
+const PDFDocument = require('pdfkit'); 
+
+
+import { Response } from 'express';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class PatientService {
@@ -42,4 +47,38 @@ export class PatientService {
     patient.discount_percentage = dto.discount_percentage;
     return this.patientRepository.save(patient);
   }
+  // generate pdf
+  async generatePrescriptionPdf(id: number, res: Response) {
+    const patient = await this.findOne(id);
+    if (!patient) throw new NotFoundException('Patient not found');
+  
+    const doc = new PDFDocument();
+    const fileName = `Prescription_Patient${id}.pdf`;
+  
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+  
+    doc.pipe(res);
+  
+    doc.fontSize(20).text('Medical Prescription', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(12).text(`Patient Name: ${patient.name}`);
+    doc.text(`Age: ${patient.age}`);
+    doc.text(`Gender: ${patient.gender}`);
+    doc.moveDown();
+  
+    doc.fontSize(14).text('Diagnosis:');
+    doc.fontSize(12).text(patient.diagnosis || 'N/A');
+    doc.moveDown();
+  
+    doc.fontSize(14).text('Prescription:');
+    doc.fontSize(12).text(patient.prescription || 'N/A');
+    doc.moveDown();
+  
+    doc.fontSize(14).text('Treatment Plan:');
+    doc.fontSize(12).text(patient.treatment_plan || 'N/A');
+  
+    doc.end();
+  }
+  
 }

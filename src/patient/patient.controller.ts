@@ -12,6 +12,9 @@ import {
   import { UpdateProgressDto } from './dto/update-progress.dto';
   import { UpdateDiscountDto } from './dto/update-discount.dto';
   import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+  import { Res } from '@nestjs/common';
+import { Response } from 'express';
+
   @UseGuards(JwtAuthGuard)
 
   @Controller('patients')
@@ -52,5 +55,11 @@ import {
     ) {
       return this.patientService.updateDiscount(id, dto);
     }
+    // get /generate pdf
+    @Get(':id/prescription/pdf')
+generatePdf(@Param('id') id: number, @Res() res: Response) {
+  return this.patientService.generatePrescriptionPdf(id, res);
+}
+
   }
   
