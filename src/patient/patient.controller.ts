@@ -5,12 +5,15 @@ import {
     Param,
     Body,
     NotFoundException,
+    UseGuards,
   } from '@nestjs/common';
   import { PatientService } from './patient.service';
   import { UpdateMedicalDto } from './dto/update-medical.dto';
   import { UpdateProgressDto } from './dto/update-progress.dto';
   import { UpdateDiscountDto } from './dto/update-discount.dto';
-  
+  import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+  @UseGuards(JwtAuthGuard)
+
   @Controller('patients')
   export class PatientController {
     constructor(private readonly patientService: PatientService) {}

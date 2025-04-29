@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { DoctorModule } from 'src/doctor/doctor.module';
-
+import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports: [
     DoctorModule,
@@ -13,6 +13,6 @@ import { DoctorModule } from 'src/doctor/doctor.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}
