@@ -8,10 +8,9 @@ export const dataSourceOptions:DataSourceOptions={
     username:process.env.DB_USERNAME,
     password:process.env.DB_PASSWORD,
     database:process.env.DB_DATABASE,
-    entities:[],
-    migrations:[],
+    entities: [__dirname + '/../src/**/*.entity.{ts,js}'],    migrations:[],
     logging:false,
-    synchronize:false
+    synchronize:true
 };
 const dataSource=new DataSource(dataSourceOptions);
 export default dataSource;
